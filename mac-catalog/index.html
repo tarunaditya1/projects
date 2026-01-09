@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MAC Cosmetics — Product Catalog</title>
+  <meta name="description" content="A creative, searchable MAC product catalog with filters, swatches, and details." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+</head>
+<body>
+    <script>
+  window.addEventListener('mouseover', initLandbot, { once: true });
+  window.addEventListener('touchstart', initLandbot, { once: true });
+  var myLandbot;
+  function initLandbot() {
+    if (!myLandbot) {
+      var s = document.createElement('script');
+      s.type = "module"
+      s.async = true;
+      s.addEventListener('load', function() {
+        var myLandbot = new Landbot.Livechat({
+          configUrl: 'https://storage.googleapis.com/landbot.online/v3/H-3219805-FHUH26V11U6KKPS2/index.json',
+        });
+      });
+      s.src = 'https://cdn.landbot.io/landbot-3/landbot-3.0.0.mjs';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+  }
+</script>
+  <header class="site-header">
+    <div class="brand">
+      <img src="assets/logo.svg" alt="MAC" class="logo" />
+      <h1>MAC Cosmetics</h1>
+      <span class="tag">Creative Product Catalog</span>
+    </div>
+    <nav class="nav">
+      <a href="#catalog">Catalog</a>
+      <a href="#about">About</a>
+      <a href="#help">How to Update</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <h2>Iconic shades. Pro finishes. Your way.</h2>
+      <p>Discover MAC bestsellers and pro-favorite formulas. Search, filter, compare, and explore shade swatches in one place.</p>
+      <div class="searchbar">
+        <input id="searchInput" class="input" type="search" placeholder="Search products, finishes, benefits..." />
+      </div>
+    </div>
+  </section>
+
+  <section id="filters" class="filters">
+    <div class="filter-row">
+      <label>
+        Category
+        <select id="categorySelect" class="select">
+          <option value="all">All</option>
+          <option value="Lips">Lips</option>
+          <option value="Face">Face</option>
+          <option value="Eyes">Eyes</option>
+          <option value="Tools">Tools</option>
+          <option value="Skincare">Skincare</option>
+        </select>
+      </label>
+      <label>
+        Finish
+        <select id="finishSelect" class="select">
+          <option value="all">All</option>
+          <option>Matte</option>
+          <option>Satin</option>
+          <option>Natural</option>
+          <option>Dewy</option>
+          <option>Radiant</option>
+        </select>
+      </label>
+      <label>
+        Sort
+        <select id="sortSelect" class="select">
+          <option value="popularity">Most Popular</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+          <option value="name-asc">Name: A → Z</option>
+          <option value="rating-desc">Rating: High → Low</option>
+        </select>
+      </label>
+      <label class="price">
+        Max Price (₹)
+        <input id="priceRange" type="range" min="500" max="7000" step="100" value="7000" />
+        <span id="priceValue">≤ ₹7,000</span>
+      </label>
+    </div>
+    <div class="chips" id="activeChips"></div>
+  </section>
+
+  <main id="catalog" class="catalog"></main>
+
+  <template id="productCardTpl">
+    <article class="card" data-id="">
+      <div class="card-media">
+        <img class="card-img" alt="Product image" loading="lazy" decoding="async" />
+        <div class="swatches" aria-label="Shades"></div>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title"></h3>
+        <p class="card-meta"></p>
+        <p class="card-desc"></p>
+        <div class="card-bottom">
+          <div class="price-rating">
+            <span class="price"></span>
+            <span class="rating" title="Average rating">★</span>
+          </div>
+          <button class="btn btn-primary viewBtn">View details</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <!-- Product Detail Modal -->
+  <dialog id="productModal" class="modal">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <div class="modal-content">
+      <img id="modalImg" alt="Product" loading="lazy" decoding="async" />
+      <div class="modal-info">
+        <h3 id="modalTitle"></h3>
+        <p id="modalMeta"></p>
+        <p id="modalDesc"></p>
+        <div class="modal-split">
+          <div>
+            <h4>Key Benefits</h4>
+            <ul id="modalBenefits"></ul>
+          </div>
+          <div>
+            <h4>Details</h4>
+            <ul id="modalDetails"></ul>
+          </div>
+        </div>
+        <div>
+          <h4>Shades</h4>
+          <div id="modalShades" class="swatches large"></div>
+        </div>
+        <div class="buy">
+          <span id="modalPrice" class="modal-price"></span>
+          <a id="modalLink" class="btn btn-primary" target="_blank" rel="noopener">Buy / Learn More</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <section id="about" class="about">
+    <h2>About MAC</h2>
+    <p>MAC Cosmetics (Make-up Art Cosmetics) is known for professional-grade pigments, expansive shade ranges, and artist‑forward innovation across face, eyes, and lips.</p>
+  </section>
+
+  <section id="help" class="help">
+    <h2>How to Update the Catalog</h2>
+    <ol>
+      <li>Open <code>data/products.js</code>.</li>
+      <li>Copy an existing product object in the <code>window.PRODUCTS</code> array and edit the fields.</li>
+      <li>Add shade entries with <code>name</code> and <code>hex</code> (for swatch color). If you don't know the hex, use a neutral like <code>#bdbdbd</code>.</li>
+      <li>Optional: add an external <code>buyLink</code> to the official product page.</li>
+    </ol>
+  </section>
+
+  <footer class="site-footer">
+    <small>Educational catalog demo. For authoritative info, always check the official MAC website.</small>
+  </footer>
+
+  <!-- Data first, then app -->
+  <script src="data/products.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
